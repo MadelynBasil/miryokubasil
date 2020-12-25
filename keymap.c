@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
-#include "g/keymap_combo.h"
+//#include "g/keymap_combo.h"
 
 enum layers {
     BASE = 0,
@@ -65,10 +65,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [QWER] = LAYOUT(
-      LT(NSL, KC_ESC), KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                                        KC_BSLS, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-      LCTL_T(KC_BSPC), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                                        KC_QUOT, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,
-      KC_TAB,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  _______, TO(BASE),  _______, KC_MINS, KC_SLSH, KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,
-      KC_LALT, LT(MEDR, KC_LGUI), LSFT_T(KC_ESC), LT(NAVR, KC_SPC), LT(MOUR, KC_ENT), LT(NSSL, KC_ENT), LT(NSL, KC_BSPC), LSFT_T(KC_DEL), LT(FUNL, KC_LGUI), KC_LALT
+      KC_ESC,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                                        KC_BSLS, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+      KC_TAB,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                                        KC_QUOT, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,
+      KC_LCTL, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  TO(NAVR), TO(BASE),  _______, KC_MINS, KC_SLSH, KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,
+                                   KC_LALT, KC_LGUI, KC_LSFT, KC_SPC, KC_ENT, LT(NSSL, KC_ENT), LT(NSL, KC_BSPC), LSFT_T(KC_DEL), LT(FUNL, KC_LGUI), KC_LALT
     ),
 /*
  * Base game Layer: GAMB
@@ -282,6 +282,27 @@ void oled_task_user(void) {
         render_status(); // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
         render_feral_logo();
+    }
+}
+#endif
+
+#ifdef ENCODER_ENABLE
+void encoder_update_user(uint8_t index, bool clockwise) {
+    if (index == 0) {
+        // Volume control
+        if (clockwise) {
+            tap_code(KC_VOLU);
+        } else {
+            tap_code(KC_VOLD);
+        }
+    }
+    else if (index == 1) {
+        // Page up/Page down
+        if (clockwise) {
+            tap_code(KC_WH_D);
+        } else {
+            tap_code(KC_WH_U);
+        }
     }
 }
 #endif
